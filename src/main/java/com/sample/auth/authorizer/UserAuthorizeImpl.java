@@ -11,8 +11,8 @@ public class UserAuthorizeImpl {
     }
 
     public boolean authorize() throws UserAuthorizationFailed {
-        // Implement you own authorization policies here (Sample implementation below)
-        if (authorizeEntity.getUserRoles().contains(authorizeEntity.getMiniMumRequiredRole())) {
+        // Implement your own authorization policies here (Sample implementation below)
+        if (!authorizeEntity.getUserRoles().contains(authorizeEntity.getMiniMumRequiredRole())) {
             throw new UserAuthorizationFailed(" User does not have proper roles");
         }
         return true;
