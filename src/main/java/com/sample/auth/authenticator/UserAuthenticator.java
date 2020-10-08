@@ -1,5 +1,7 @@
 package com.sample.auth.authenticator;
 
+import com.google.common.collect.ImmutableList;
+import com.sample.auth.enums.UserRole;
 import com.sample.auth.exceptions.UserAuthenticationFailed;
 import com.sample.auth.model.UserDetails;
 
@@ -16,9 +18,14 @@ public class UserAuthenticator {
 
     public UserDetails authenticate() throws UserAuthenticationFailed {
         httpRequest.getHeader(AUTHENTICATION_TOKEN);
-        // call respective service for user authentication
+        // call respective service for user authentication passing token
         //Success -> Construct UserDetails and return
         //Failure -> throw UserAuthenticationFailed exception
-        return null;
+
+        /* Sample response*/
+        return new UserDetails.UserDetailsBuilder()
+                .setUserName("USER")
+                .setUserRoles(ImmutableList.of(UserRole.ADMIN, UserRole.MAINTAINER, UserRole.SUPPORT, UserRole.DEVELOPER))
+                .build();
     }
 }

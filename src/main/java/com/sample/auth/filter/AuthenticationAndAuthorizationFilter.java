@@ -35,19 +35,21 @@ public class AuthenticationAndAuthorizationFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         String requestURI = httpRequest.getRequestURI();
         String api = requestURI.substring(requestURI.lastIndexOf('/') + 1);
-        System.out.println(api);
         if (!AppMain.IGNORE_REQUEST_FILTERS.contains(api)) {
             UserDetails userDetails;
             try {
                 userDetails = new UserAuthenticator(httpRequest).authenticate();
+                LOGGER.info("Authentication successful for user : {} " , userDetails.getUserName());
+
             } catch (UserAuthenticationFailed e) {
+                LOGGER.error("Authentication failed for user : " , e);
                 httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
 
             String methodName = AppMain.REQUEST_TO_METHOD_MAPPER.get(api);
             if (methodName == null) {
-                LOGGER.error("No resource mappings found for api " + api);
+                LOGGER.error("No resource mappings found for api {}" , api);
                 httpResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 return;
             }
@@ -65,10 +67,10 @@ public class AuthenticationAndAuthorizationFilter implements Filter {
                             setMiniMumRequiredRole(authorization.requiredRole()).
                             setUserRoles(userDetails.getUserRoles()).build();
                     if (new UserAuthorizeImpl(authorizeEntity).authorize()) {
-                        LOGGER.info("Authorization successful for user : " + userDetails.getUserName());
+                        LOGGER.info("Authorization successful for user : {} " , userDetails.getUserName());
                     }
                 } else {
-                    LOGGER.warn("Authorization is not enabled for resource : " + api);
+                    LOGGER.warn("Authorization is not enabled for resource : {}" , api);
                 }
             } catch (UserAuthorizationFailed e) {
                 LOGGER.error("Authorization failed for user : " + userDetails.getUserName() , e);
