@@ -24,15 +24,15 @@ public class UserDetails {
     }
 
     public static class UserDetailsBuilder {
-        public String userName;
+        private String userName;
         private List<UserRole> userRoles;
 
-        public UserDetailsBuilder setUserRoles(List<UserRole> userRoles) {
+        public UserDetailsBuilder userRoles(List<UserRole> userRoles) {
             this.userRoles = userRoles;
             return this;
         }
 
-        public UserDetailsBuilder setUserName(String userName) {
+        public UserDetailsBuilder userName(String userName) {
             this.userName = userName;
             return this;
         }

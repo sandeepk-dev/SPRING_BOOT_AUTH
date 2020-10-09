@@ -27,12 +27,12 @@ public class AuthorizeEntity {
         private UserRole miniMumRequiredRole;
         private List<UserRole> userRoles;
 
-        public AuthorizeEntityBuilder setMiniMumRequiredRole(UserRole miniMumRequiredRole) {
+        public AuthorizeEntityBuilder miniMumRequiredRole(UserRole miniMumRequiredRole) {
             this.miniMumRequiredRole = miniMumRequiredRole;
             return this;
         }
 
-        public AuthorizeEntityBuilder setUserRoles(List<UserRole> userRoles) {
+        public AuthorizeEntityBuilder userRoles(List<UserRole> userRoles) {
             this.userRoles = userRoles;
             return this;
         }

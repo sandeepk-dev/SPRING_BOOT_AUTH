@@ -1,5 +1,6 @@
 package com.sample.auth.authorizer;
 
+import com.sample.auth.enums.UserRole;
 import com.sample.auth.exceptions.UserAuthorizationFailed;
 
 public class UserAuthorizeImpl {
@@ -11,10 +12,13 @@ public class UserAuthorizeImpl {
     }
 
     public boolean authorize() throws UserAuthorizationFailed {
+
         // Implement your own authorization policies here (Sample implementation below)
-        if (!authorizeEntity.getUserRoles().contains(authorizeEntity.getMiniMumRequiredRole())) {
-            throw new UserAuthorizationFailed(" User does not have proper roles");
+        if (authorizeEntity.getUserRoles().contains(UserRole.ADMIN)) {
+            return true;
         }
-        return true;
+
+
+        return false;
     }
 }
