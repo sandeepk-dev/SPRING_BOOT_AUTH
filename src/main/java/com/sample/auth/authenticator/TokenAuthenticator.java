@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 public class TokenAuthenticator implements Authenticator  {
     Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+
     @Override
     public UserDetails authenticate(AuthenticationRequest request) throws UserAuthenticationFailed {
         UserDetails userDetails = null;
@@ -17,11 +18,15 @@ public class TokenAuthenticator implements Authenticator  {
             /* Authenticate user here and return UserDetails */
 
             /*Dummy userDetails*/
-            userDetails = new UserDetails.UserDetailsBuilder().userName("userName").userRoles(ImmutableList.of(UserRole.ADMIN)).build();
+            userDetails = new UserDetails.UserDetailsBuilder()
+                    .userName("userName")
+                    .userRoles(ImmutableList.of(UserRole.ADMIN))
+                    .build();
 
 
         } catch (Exception e) {
             LOGGER.error("Error authenticating user ", e);
+            throw new UserAuthenticationFailed(e);
         }
 
         return userDetails;

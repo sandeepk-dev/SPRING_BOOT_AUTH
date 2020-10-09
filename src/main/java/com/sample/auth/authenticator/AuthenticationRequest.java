@@ -32,12 +32,10 @@ public class AuthenticationRequest {
         password = Optional.ofNullable(builder.password);
     }
 
-
     public static class AuthenticationRequestBuilder {
         private String token;
         private String userName;
         private String password;
-
 
         public AuthenticationRequestBuilder userName(String userName) {
             this.userName = userName;

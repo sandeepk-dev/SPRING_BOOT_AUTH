@@ -12,18 +12,21 @@ public class PasswordAuthenticator implements Authenticator {
 
     @Override
     public UserDetails authenticate(AuthenticationRequest request) throws UserAuthenticationFailed {
-        UserDetails userDetails = null;
+        UserDetails userDetails;
         try {
-            String userName =  request.getUserName();
-            String password = request.getPassword();
-            /* Authenticate user here and return UserDetails */
+//            String userName =  request.getUserName();
+//            String password = request.getPassword();
+            /* Authenticate user here and return UserDetails. Upon failure throw UserAuthorizationFailed */
 
             /*Dummy userDetails*/
-            userDetails = new UserDetails.UserDetailsBuilder().userName(userName).userRoles(ImmutableList.of(UserRole.ADMIN)).build();
+            userDetails = new UserDetails.UserDetailsBuilder()
+                    .userName("USER")
+                    .userRoles(ImmutableList.of(UserRole.ADMIN))
+                    .build();
         } catch (Exception e) {
             LOGGER.error("Error authenticating user ", e);
+            throw new UserAuthenticationFailed(e);
         }
-
         return userDetails;
     }
 }

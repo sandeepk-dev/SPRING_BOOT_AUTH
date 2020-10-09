@@ -6,6 +6,9 @@ public class UserAuthenticationFailed extends Exception {
         super();
     }
 
+    public UserAuthenticationFailed(Throwable t) {
+        super(t);
+    }
     public UserAuthenticationFailed(String message) {
         super(message);
     }

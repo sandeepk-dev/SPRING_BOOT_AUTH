@@ -4,7 +4,7 @@ import com.sample.auth.enums.UserRole;
 
 import java.util.List;
 
-public class AuthorizeEntity {
+public class AuthorizationRequest {
 
     private UserRole miniMumRequiredRole;
     private List<UserRole> userRoles;
@@ -17,28 +17,28 @@ public class AuthorizeEntity {
         return miniMumRequiredRole;
     }
 
-    public AuthorizeEntity(AuthorizeEntityBuilder builder) {
+    public AuthorizationRequest(AuthorizationRequestBuilder builder) {
         this.miniMumRequiredRole = builder.miniMumRequiredRole;
         this.userRoles = builder.userRoles;
     }
 
-    public static class AuthorizeEntityBuilder {
+    public static class AuthorizationRequestBuilder {
 
         private UserRole miniMumRequiredRole;
         private List<UserRole> userRoles;
 
-        public AuthorizeEntityBuilder miniMumRequiredRole(UserRole miniMumRequiredRole) {
+        public AuthorizationRequestBuilder miniMumRequiredRole(UserRole miniMumRequiredRole) {
             this.miniMumRequiredRole = miniMumRequiredRole;
             return this;
         }
 
-        public AuthorizeEntityBuilder userRoles(List<UserRole> userRoles) {
+        public AuthorizationRequestBuilder userRoles(List<UserRole> userRoles) {
             this.userRoles = userRoles;
             return this;
         }
 
-        public AuthorizeEntity build() {
-            return new AuthorizeEntity(this);
+        public AuthorizationRequest build() {
+            return new AuthorizationRequest(this);
         }
     }
 }

@@ -5,19 +5,20 @@ import com.sample.auth.exceptions.UserAuthorizationFailed;
 
 public class UserAuthorizeImpl {
 
-    private AuthorizeEntity authorizeEntity;
+    private AuthorizationRequest authorizationRequest;
 
-    public UserAuthorizeImpl(AuthorizeEntity authorizeEntity) {
-        this.authorizeEntity = authorizeEntity;
+    public UserAuthorizeImpl(AuthorizationRequest authorizationRequest) {
+        this.authorizationRequest = authorizationRequest;
     }
 
     public boolean authorize() throws UserAuthorizationFailed {
 
         // Implement your own authorization policies here (Sample implementation below)
-        if (authorizeEntity.getUserRoles().contains(UserRole.ADMIN)) {
+        if (authorizationRequest.getUserRoles().contains(UserRole.ADMIN)) {
             return true;
         }
 
+        //on failure throw UserAuthorizationFailed
 
         return false;
     }
