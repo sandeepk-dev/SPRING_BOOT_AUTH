@@ -29,26 +29,26 @@ public class AppMain {
         Map<String,MethodNameToParameterMapper> map = new HashMap<>();
         CONTROLLER_LIST.forEach(controller -> {
             for (Method method: controller.getMethods()) {
-                GetMapping getMapping = method.getAnnotation(GetMapping.class);
-                if (getMapping != null) {
+                if (method.isAnnotationPresent(GetMapping.class)) {
+                    GetMapping getMapping = method.getAnnotation(GetMapping.class);
                     String apiUrl = getMapping.value()[0];
                     updateUriToMethodMapping(map, method, apiUrl);
                     continue;
                 }
-                PostMapping postMapping = method.getAnnotation(PostMapping.class);
-                if (postMapping != null) {
+                if (method.isAnnotationPresent(PostMapping.class)) {
+                    PostMapping postMapping = method.getAnnotation(PostMapping.class);
                     String apiUrl = postMapping.value()[0];
                     updateUriToMethodMapping(map, method, apiUrl);
                     continue;
                 }
-                DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
-                if (deleteMapping != null) {
+                if (method.isAnnotationPresent(DeleteMapping.class)) {
+                    DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
                     String apiUrl = deleteMapping.value()[0];
                     updateUriToMethodMapping(map, method, apiUrl);
                     continue;
                 }
-                PutMapping putMapping = method.getAnnotation(PutMapping.class);
-                if (putMapping != null) {
+                if (method.isAnnotationPresent(PutMapping.class)) {
+                    PutMapping putMapping = method.getAnnotation(PutMapping.class);
                     String apiUrl = putMapping.value()[0];
                     updateUriToMethodMapping(map, method, apiUrl);
                 }

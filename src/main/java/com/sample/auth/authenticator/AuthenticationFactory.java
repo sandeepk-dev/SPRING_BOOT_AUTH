@@ -3,9 +3,9 @@ package com.sample.auth.authenticator;
 import com.sample.auth.enums.AuthenticationType;
 
 @SuppressWarnings("unchecked")
-public class AuthenticationFactory <T extends Authenticator> {
+public class AuthenticationFactory {
 
-    public T getAuthenticator(AuthenticationType type) {
+    public static <T extends Authenticator> T getAuthenticator(AuthenticationType type) {
         if (type == AuthenticationType.PASSWORD_BASED) {
             return (T) new PasswordAuthenticator();
         } else if(type == AuthenticationType.TOKEN_BASED) {
@@ -14,7 +14,7 @@ public class AuthenticationFactory <T extends Authenticator> {
         return getDefaultAuthenticator();
     }
 
-    public T getDefaultAuthenticator() {
+    public static <T extends Authenticator> T getDefaultAuthenticator() {
         return (T) new PasswordAuthenticator();
     }
 

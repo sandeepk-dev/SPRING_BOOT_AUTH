@@ -33,27 +33,31 @@ public class AuthorizationFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         MutableHttpServletRequest httpRequest = (MutableHttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
-        UserDetails userDetails = (UserDetails) httpRequest.getCustomHeader(USER_DETAILS);
-        AppMain.MethodNameToParameterMapper methodDetails = (AppMain.MethodNameToParameterMapper) httpRequest.getCustomHeader(METHOD_DETAILS);
-        try {
-            if (authorizeUser(ApiController.class.getMethod(methodDetails.getMethodName(), methodDetails.getParameterTypes()), userDetails)) {
-                LOGGER.info("Authorization successful for user : {} ", userDetails.getUserName());
+        String requestURI = httpRequest.getRequestURI();
+        String api = requestURI.substring(requestURI.lastIndexOf('/') + 1);
+        if (!AppMain.IGNORE_REQUEST_FILTERS.contains(api)) {
+            UserDetails userDetails = (UserDetails) httpRequest.getCustomHeader(USER_DETAILS);
+            AppMain.MethodNameToParameterMapper methodDetails = (AppMain.MethodNameToParameterMapper) httpRequest.getCustomHeader(METHOD_DETAILS);
+            try {
+                if (authorizeUser(ApiController.class.getMethod(methodDetails.getMethodName(), methodDetails.getParameterTypes()), userDetails)) {
+                    LOGGER.info("Authorization successful for user : {} ", userDetails.getUserName());
+                }
+            } catch (NoSuchMethodException e) {
+                LOGGER.error("Authorization failed for user : " + userDetails.getUserName(), e);
+                httpResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return;
+            } catch (UserAuthorizationFailed e) {
+                LOGGER.error("Authorization failed for user : " + userDetails.getUserName(), e);
+                httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
             }
-        } catch (NoSuchMethodException e) {
-            LOGGER.error("Authorization failed for user : " + userDetails.getUserName(), e);
-            httpResponse.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            return;
-        } catch (UserAuthorizationFailed e) {
-            LOGGER.error("Authorization failed for user : " + userDetails.getUserName(), e);
-            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
         }
         filterChain.doFilter(servletRequest, httpResponse);
     }
 
     private boolean authorizeUser(Method method, UserDetails userDetails) throws UserAuthorizationFailed {
-        Authorization authorization = method.getAnnotation(Authorization.class);
-        if (authorization != null && authorization.enabled()) {
+        if (method.isAnnotationPresent(Authorization.class) && method.getAnnotation(Authorization.class).enabled()) {
+            Authorization authorization = method.getAnnotation(Authorization.class);
             AuthorizationRequest authorizationRequest = new AuthorizationRequest.AuthorizationRequestBuilder().
                     miniMumRequiredRole(authorization.requiredRole())
                     .userRoles(userDetails.getUserRoles())

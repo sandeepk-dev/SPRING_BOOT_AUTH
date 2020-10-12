@@ -54,9 +54,9 @@ public class AuthenticationFilter<T extends Authenticator> implements Filter {
                 for (Class<?> controller : CONTROLLER_LIST) {
                     Method method = controller.getMethod(methodDetails.getMethodName(), methodDetails.getParameterTypes());
                     UserDetails userDetails = null;
-                    Authentication authentication = method.getAnnotation(Authentication.class);
-                    if (authentication != null && authentication.enabled()) {
-                        T authenticator = new AuthenticationFactory<T>().getAuthenticator(authentication.type());
+                    if (method.isAnnotationPresent(Authentication.class) && method.getAnnotation(Authentication.class).enabled()) {
+                        Authentication authentication = method.getAnnotation(Authentication.class);
+                        T authenticator = AuthenticationFactory.getAuthenticator(authentication.type());
                         userDetails = authenticateUser(httpRequest, authenticator);
                     }
                     if (userDetails != null) {
